@@ -2,7 +2,8 @@ package fr.uga.m1;
 
 import java.text.NumberFormat;
 
-public class Produit {
+
+public class Produit{
 
 	private String nom;
 	private String description;
@@ -18,7 +19,7 @@ public class Produit {
 
 	public String getNom() {
 		return nom;
-	}	
+	}
 
 	public String getDescription() {
 		return description;
@@ -27,17 +28,19 @@ public class Produit {
 	public int getQuantite() {
 		return quantite;
 	}
+	public void setQuantite(int q) {
+		this.quantite+= q;
+	}
 
 	public float getPrix() {
 		return prix;
 	}
 
 	public String toString() {
-
 		NumberFormat fmt = NumberFormat.getCurrencyInstance();
-
-		return (getNom() + "\t" + fmt.format(getPrix()) + "\t" + getQuantite() + "\t\t"
+		return ("Nom produit: "+getNom() + "\nPrix unitaire: " + fmt.format(getPrix()) + "\nQuantité: " + getQuantite() + "\nPrix total :"
 				+ fmt.format(getPrix() * getQuantite()));
 	}
+
 
 }

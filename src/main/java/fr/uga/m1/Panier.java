@@ -7,34 +7,42 @@ import fr.uga.m1.compta.ServiceComptabilite;
 import fr.uga.m1.stock.ServiceStock;
 
 public class Panier {
+	/***
+	 * A la creation du panier l'etat est nonValide la valeur est à -1 jusqu'a
+	 * eventuel changement
+	 */
 
 	private List<Produit> produits;
+	private List<LigneCommande> lPaniers;
 
 	private ServiceComptabilite compta = ServiceComptabilite.getServiceComptabilite();
 	private ServiceStock stock = ServiceStock.getServiceStock();
+	EtatPanier etatPanier;
 
 	public Panier() {
 		produits = new ArrayList<Produit>();
+		setlPaniers(new ArrayList<LigneCommande>());
+		etatPanier = new EtatPreCommande();
 	}
 
 	public void ajouteProduit(Produit p) {
+		if (p == null)
+			return;
 		produits.add(p);
 	}
 
 	public void enleveProduit(Produit p) {
-		for (int i = 0; i < produits.size(); i++) {
-			if (p.getNom().equals(produits.get(i).getNom()) && p.getPrix() == produits.get(i).getPrix()) {
-				produits.remove(i);
-			}
-		}
+		produits.remove(p);
 	}
 
 	public float getPrixTotal() {
-		float pT = 0.0F;
-		for (Produit p : produits) {
-			pT += p.getPrix() * p.getQuantite();
+		float prix = 0.0F;
+		ProduitIterator produit = new ProduitIterator(produits);
+		while (produit.hasNext()) {
+			Produit p = produit.next();
+			prix += p.getPrix() * p.getQuantite();
 		}
-		return pT;
+		return prix;
 	}
 
 	public boolean passerCommande() {
@@ -42,16 +50,32 @@ public class Panier {
 	}
 
 	public String toString() {
-		// TODO Afficher le contenu du panier
-		StringBuffer str = new StringBuffer();
+		StringBuffer sB = new StringBuffer();
 		String contenu = "\nVotre Panier contient :\n";
-		str.append(contenu);
+		sB.append(contenu);
 		for (Produit p : produits) {
-			str.append(p.getQuantite()).append(" ").append(p.getNom()).append(" au prix unitaire de ")
+			sB.append(p.getQuantite()).append(" ").append(p.getNom()).append(" au prix unitaire de ")
 					.append(p.getPrix()).append("\n");
 		}
-		str.append(" La valeur du panier est de: ").append(this.getPrixTotal());
-		return str.toString();
+		sB.append("\nLa valeur du panier est de: ").append(this.getPrixTotal()).append("€");
+		sB.append("\nEtat du panier: ").append(this.getEtat().toString());
+		return sB.toString();
 	}
+
+
+
+	public EtatPanier getEtat() {
+		return etatPanier;
+	}
+
+	public List<LigneCommande> getlPaniers() {
+		return lPaniers;
+	}
+
+	public void setlPaniers(List<LigneCommande> lPaniers) {
+		this.lPaniers = lPaniers;
+	}
+
+
 
 }
