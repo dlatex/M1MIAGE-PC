@@ -7,40 +7,24 @@ import fr.uga.m1.compta.ServiceComptabilite;
 import fr.uga.m1.stock.ServiceStock;
 
 public class Panier {
-	/***
-	 * A la creation du panier l'etat est nonValide la valeur est à -1 jusqu'a
-	 * eventuel changement
-	 */
-
-	private List<Produit> produits;
-	private List<LigneCommande> lPaniers;
+	private List<LigneCommande> listeLigneCommande;
+	EtatPanier etatPanier;
+	EtatPreValide preCommande;
+	EtatValide valide;
+	EtatNonValide nonValide;
 
 	private ServiceComptabilite compta = ServiceComptabilite.getServiceComptabilite();
 	private ServiceStock stock = ServiceStock.getServiceStock();
-	EtatPanier etatPanier;
 
 	public Panier() {
-		produits = new ArrayList<Produit>();
-		setlPaniers(new ArrayList<LigneCommande>());
-		etatPanier = new EtatPreCommande();
-	}
-
-	public void ajouteProduit(Produit p) {
-		if (p == null)
-			return;
-		produits.add(p);
-	}
-
-	public void enleveProduit(Produit p) {
-		produits.remove(p);
+		listeLigneCommande = new ArrayList<LigneCommande>();
+		etatPanier = new EtatNonValide(this);
 	}
 
 	public float getPrixTotal() {
 		float prix = 0.0F;
-		ProduitIterator produit = new ProduitIterator(produits);
-		while (produit.hasNext()) {
-			Produit p = produit.next();
-			prix += p.getPrix() * p.getQuantite();
+		for (LigneCommande l : listeLigneCommande) {
+			prix += l.totalLigne();
 		}
 		return prix;
 	}
@@ -49,33 +33,80 @@ public class Panier {
 		return stock.traite(this) && compta.traite(this);
 	}
 
-	public String toString() {
-		StringBuffer sB = new StringBuffer();
-		String contenu = "\nVotre Panier contient :\n";
-		sB.append(contenu);
-		for (Produit p : produits) {
-			sB.append(p.getQuantite()).append(" ").append(p.getNom()).append(" au prix unitaire de ")
-					.append(p.getPrix()).append("\n");
-		}
-		sB.append("\nLa valeur du panier est de: ").append(this.getPrixTotal()).append("€");
-		sB.append("\nEtat du panier: ").append(this.getEtat().toString());
-		return sB.toString();
-	}
-
-
-
+	/*** Version partie 3 ***/
 	public EtatPanier getEtat() {
 		return etatPanier;
 	}
 
-	public List<LigneCommande> getlPaniers() {
-		return lPaniers;
+	public void changeEtat(EtatPanier etat) {
+		this.etatPanier = etat;
 	}
 
-	public void setlPaniers(List<LigneCommande> lPaniers) {
-		this.lPaniers = lPaniers;
+	public void ajouterLigneCommande(Produit produit) {
+		if (this.getEtat().toString().equals("Etat non valide")) {
+			nonValide = new EtatNonValide(this);
+			nonValide.ajouterLigneCommande(listeLigneCommande, produit);
+		}
+		if (this.getEtat().toString().equals("Etat PreCommande")) {
+			preCommande = new EtatPreValide(this);
+			preCommande.ajouterLigneCommande(listeLigneCommande, produit);
+		}
+		if (this.getEtat().toString().equals("Etat Valide")) {
+			valide = new EtatValide(this);
+			valide.ajouterLigneCommande(listeLigneCommande, produit);
+		}
 	}
 
+	public void enleverLigneCommande(Produit produit) {
+		if (this.getEtat().toString().equals("Etat non valide")) {
+			nonValide = new EtatNonValide(this);
+			nonValide.enleverLigneCommande(listeLigneCommande, produit);
+		}
+		if (this.getEtat().toString().equals("Etat PreCommande")) {
+			preCommande = new EtatPreValide(this);
+			preCommande.enleverLigneCommande(listeLigneCommande, produit);
+		}
+		if (this.getEtat().toString().equals("Etat Valide")) {
+			valide = new EtatValide(this);
+			valide.enleverLigneCommande(listeLigneCommande, produit);
+		}
+	}
 
+	public void modifierLigneCommande(Produit produit, int quantite) {
+		if (this.getEtat().toString().equals("Etat non valide")) {
+			nonValide = new EtatNonValide(this);
+			nonValide.modifierLigneCommande(listeLigneCommande, produit,quantite);
+		}
+		if (this.getEtat().toString().equals("Etat PreCommande")) {
+			preCommande = new EtatPreValide(this);
+			preCommande.modifierLigneCommande(listeLigneCommande, produit,quantite);
+		}
+		if (this.getEtat().toString().equals("Etat Valide")) {
+			valide = new EtatValide(this);
+			valide.modifierLigneCommande(listeLigneCommande, produit,quantite);
+		}
+	}
 
+	public void setEtat(EtatPanier etat) {
+		this.etatPanier = etat;
+	}
+
+	public String toString() {
+		StringBuffer sB = new StringBuffer();
+		String contenu = "\n-----Votre Panier contient:\n";
+		
+		sB.append(contenu);
+		sB.append("Quantite\t"+"Produit"+"\t\tPrix unitaire\n");
+		for (LigneCommande lc : listeLigneCommande) {
+			if (lc.getQuantite() == 0) {
+				sB.append("");
+			} else {
+				sB.append("" + lc.getQuantite()).append("\t\t").append(lc.getProduit().getNom())
+						.append("\t\t").append(lc.getProduit().getPrix()).append("\u20ac"+"\n");
+			}
+
+		}
+		sB.append("La valeur du panier est de: ").append(this.getPrixTotal()).append("\u20ac");
+		return sB.toString();
+	}
 }

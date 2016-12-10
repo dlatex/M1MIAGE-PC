@@ -1,28 +1,31 @@
 package fr.uga.m1;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class UniversIteratorImpl implements UniversIterator<Univers>{
 	private List<Univers> univers;
 	private int index;
 
-	public UniversIteratorImpl() {
+	public UniversIteratorImpl(List<Univers> universListe) {
 		index = 0;
-		univers = new ArrayList<Univers>();
+		this.univers = universListe;
 	}
 
 	@Override
 	public boolean hasNext() {
-		return index < univers.size();
+		return index < this.univers.size();
 
 	}
 
 	@Override
 	public Univers next() {
-		index++;
-		Univers univ = univers.get(index);
-		return univ;
+		if (hasNext()) {
+			Univers u = this.univers.get(index);
+			index++;
+			return u;
+		}
+		return null;
 	}
 
 }

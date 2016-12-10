@@ -1,60 +1,53 @@
 package fr.uga.m1;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class EtatPreCommande extends EtatPanier {
+public class EtatPreValide extends EtatPanier {
+	Panier panierCommande;
 
-	private List<LigneCommande> ligneCommande;
-
-	public EtatPreCommande() {
-		ligneCommande = new ArrayList<LigneCommande>();
+	public EtatPreValide(Panier panier) {
+		panierCommande = panier;
 	}
 
-	public void ajouteLigneCommande(Produit p) {
-		if (ligneCommande.size() == 0) {
-			LigneCommande produit = new LigneCommande(p);
-			ligneCommande.add(produit);
-		} else {
-			for (LigneCommande lp : ligneCommande) {
-				if (lp.getProduit().getNom().equals(p.getNom())) {
-					lp.ajouteProduit();
-				} else {
-					LigneCommande produit = new LigneCommande(p);
-					ligneCommande.add(produit);
+	public void modifierLigneCommande(List<LigneCommande> panier, Produit produit,int q) {
+		if (panier.size() == 0) {
+			panier.add((new LigneCommande(produit)));
+			System.out.println("je passe");
+		}
+		if (panier.size() > 0) {
+			for (LigneCommande commande : panier) {			
+				if (commande.getProduit().getNom().equals(produit.getNom())) {
+					commande.modifierProduit(q);
 				}
 			}
 		}
+
+
 	}
 
-	public void afficherLigneCommande() {
-		for (LigneCommande p : ligneCommande) {
-			System.out.println(p.getDescription());
-		}
-	}
-
-	public void modifierLigneCommande(LigneCommande lc, int i) {
-		for (LigneCommande commande : ligneCommande) {
-			if (commande.getProduit().equals(lc.getProduit())) {
-				commande.modifierProduit(i);
+	public void enleverLigneCommande(List<LigneCommande> panier, Produit produit) {
+		int flag = 0;
+		for (LigneCommande commande : panier) {
+			if (commande.getProduit().getNom().equals(produit.getNom())) {
+				commande.enleverProduit();
+				flag = 1;
 			}
 		}
+		if (flag == 0) {
+			System.err.println("ce produit ne fait pas parti du panier");
+		}
 	}
 
-	public void enleverLigneCommande(LigneCommande lc) {
-		ligneCommande.remove(lc);
-	}
-	public String toString(){
-		return "EtatPreCommande";
-	}
-	@Override
-	public void ajouterLigneCommande(LigneCommande lc) {
-		throw new IllegalArgumentException("La Ligne de commande ne contient pas autant de produit");
+	public String toString() {
+		return "Etat PreCommande";
 	}
 
-	@Override
-	public EtatPanier nextState(EtatPanier state) {
-		return state;
+	public void ajouterLigneCommande(List<LigneCommande> commande, Produit produit) {
+		System.err.println("\nOperation ajout ligne de commande impossible dans l'etat pre-valide du panier\n");
 	}
-	
+
+	public void changeState(Panier panier) {
+		panier.changeEtat(new EtatValide(panier));
+	}
+
 }

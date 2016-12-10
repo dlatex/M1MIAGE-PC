@@ -21,11 +21,6 @@ catalogueTestAndAddRemoveUnivers();
 		univers.ajouteProduit(mac);
 
 		hight.ajouteProduit(new Produit("Adidas","Sport",1,12.3F));
-
-		Catalogue c=new Catalogue(univers);
-		c.ajouteUnivers(hight);
-		
-		System.out.println(c.getCatalogue().toString());
 	}
 	public void testDeclaredConstructors() {
 		assertDeclaredConstructor(fr.uga.m1.Catalogue.class, new Class[] { Univers.class},

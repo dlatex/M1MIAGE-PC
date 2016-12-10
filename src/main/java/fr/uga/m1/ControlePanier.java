@@ -1,11 +1,13 @@
 package fr.uga.m1;
 
+import java.util.List;
+
 public interface ControlePanier {
-	public void modifierLigneCommande(LigneCommande lc,int quantite);
+	public void modifierLigneCommande(List<LigneCommande> commande,Produit produit,int quantite);
 
-	public void ajouterLigneCommande(LigneCommande lc);
+	public void ajouterLigneCommande(List<LigneCommande> commande, Produit produit);
 
-	public void enleverLigneCommande(LigneCommande lc);
+	public void enleverLigneCommande(List<LigneCommande>  commande,Produit produit);
 
-	public EtatPanier nextState(EtatPanier state);
+	public void changeState(Panier panier);
 }

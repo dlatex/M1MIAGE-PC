@@ -31,9 +31,14 @@ public class Univers {
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder("Univers-->");
-		sb.append(getNom()).append(" contient " + nombreProduit()+" produit(s)");
-		sb.append("\n");
+		StringBuilder sb = new StringBuilder("");
+		sb.append("-----"+getNom()).append(" & contient " + nombreProduit()+" produit(s)");
+		ProduitIterator piT = new ProduitIterator(univers);
+		while (piT.hasNext()) {
+			Produit p=piT.next();
+			sb.append(p.toString());
+		}
+		sb.append("\n\n");
 		return sb.toString();
 	}
 
@@ -42,5 +47,10 @@ public class Univers {
 		while (piT.hasNext()) {
 			System.out.println(piT.next());
 		}
+	}
+
+	public List<Produit> getListProduit() {
+		// TODO Auto-generated method stub
+		return univers;
 	}
 }

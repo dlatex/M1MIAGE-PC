@@ -3,43 +3,51 @@ package fr.uga.m1;
 public class LigneCommande {
 
 	private Produit produit;
+	private int quantite;
 
 	public LigneCommande(Produit produit) {
-		this.produit=produit;
+		this.produit = produit;
+		quantite = 1;
 	}
 
 	public int getQuantite() {
-		return produit.getQuantite();
+		return this.quantite;
 	}
-
 
 	public Produit getProduit() {
 		return produit;
 	}
 
 	public void ajouteProduit() {
-		this.produit.setQuantite(this.produit.getQuantite()+1);
+		this.quantite++;
 	}
 
-	public void modifierProduit(int quantite) {
-		if (this.produit.getQuantite() < quantite) {
-			throw new IllegalArgumentException("La Ligne de commande ne contient pas autant de produit");
-		}
-		if (produit.getQuantite() > 0) {
-			this.produit.setQuantite(-quantite);
+	public void enleverProduit() {
+		if (this.quantite > 0) {
+			quantite--;
 		}
 	}
-	public String toString(){
+
+	public void modifierProduit(int k) {
+		if(this.quantite==0 && k<0) return ;
+		this.quantite += k;
+	}
+
+	public String toString() {
+		System.out.println(this.getDescription());
 		System.out.println("--------------");
-		return "\t"+getQuantite()+"\t"+produit.getNom();
+		return "\t" + getQuantite() + "\t" + produit.getNom();
 	}
+
 	public float totalLigne() {
-		return produit.getPrix() * produit.getQuantite();
+		return produit.getPrix() * this.quantite;
 	}
+
 	public String getDescription() {
-		StringBuffer description = new StringBuffer("La ligne de commande contient:");
-			description.append(produit.getNom()).append(" pour une valeur de: ");
-		description.append(this.totalLigne()).append("€");
+		StringBuffer description = new StringBuffer("Ligne de Commande: ");
+		description.append(produit.getNom() + " ");
+		description.append(" pour une valeur de: ");
+		description.append(this.totalLigne()).append("\u20ac");
 		return description.toString();
 	}
 }

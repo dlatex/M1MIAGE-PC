@@ -22,8 +22,8 @@ public class PanierTest extends AbstractTest {
 		Produit pa = new Produit("Chaussures", "Chaussures de sport", 1, 95.0F);
 
 		Panier panier = new Panier();
-		panier.ajouteProduit(p);
-		panier.ajouteProduit(pa);
+		//panier.ajouteProduit(p);
+		//panier.ajouteProduit(pa);
 
 		System.out.println("Montant du panier: " + panier.getPrixTotal());
 		System.out.println(panier.toString());
@@ -32,7 +32,7 @@ public class PanierTest extends AbstractTest {
 		assertEquals("Chaussures de ville confortables", p.getDescription());
 		assertEquals(2, p.getQuantite());
 		assertTrue(265.0F == panier.getPrixTotal());
-		panier.enleveProduit(pa);
+		//panier.enleveProduit(pa);
 		assertTrue(170.0F == panier.getPrixTotal());
 
 		System.out.println(panier.toString());

@@ -38,8 +38,9 @@ public class Produit{
 
 	public String toString() {
 		NumberFormat fmt = NumberFormat.getCurrencyInstance();
-		return ("Nom produit: "+getNom() + "\nPrix unitaire: " + fmt.format(getPrix()) + "\nQuantité: " + getQuantite() + "\nPrix total :"
-				+ fmt.format(getPrix() * getQuantite()));
+		return ("\n\t"+getNom() + "\t\t\tPrix unitaire: " + fmt.format(getPrix()));
+	/*	 + "\t\tQuantite: " + getQuantite() + "\t\tPrix total :"
+			+ fmt.format(getPrix() * getQuantite()*/
 	}
 
 
